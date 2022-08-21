@@ -74,9 +74,9 @@ fig
 
 > To be precise, figures will display themselves using the current default renderer when the two following conditions are true. First, the last expression in a cell must evaluate to a figure. Second, `plotly.py` must be running from within an `IPython` kernel.
 
-**In many contexts, an appropriate renderer will be chosen automatically and you will not need to perform any additional configuration.** These contexts include the classic [Jupyter Notebook](https://jupyter.org/), [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), [Visual Studio Code notebooks](https://code.visualstudio.com/docs/python/jupyter-support), [Google Colaboratory](https://colab.research.google.com/notebooks/intro.ipynb), [Kaggle](https://www.kaggle.com/kernels) notebooks, [Azure](https://notebooks.azure.com/) notebooks, and the [Python interactive shell](https://www.python.org/shell/).
+**In many contexts, an appropriate renderer will be chosen automatically and you will not need to perform any additional configuration.** These contexts include the classic [Jupyter Notebook](https://jupyter.org/), [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), [Visual Studio Code](https://code.visualstudio.com/docs/python/jupyter-support) notebooks, [Google Colaboratory](https://colab.research.google.com/notebooks/intro.ipynb), [Kaggle](https://www.kaggle.com/kernels) notebooks, [Azure](https://notebooks.azure.com/) notebooks, and the [Python interactive shell](https://www.python.org/shell/).
 
-Additional contexts are supported by choosing a compatible renderer including the [IPython console](https://docs.spyder-ide.org/ipythonconsole.html), [QtConsole](https://qtconsole.readthedocs.io/en/stable/), [Spyder](https://www.spyder-ide.org/), and more.
+Additional contexts are supported by choosing a compatible renderer including the [IPython console](https://ipython.org/), [QtConsole](https://qtconsole.readthedocs.io/en/stable/), [Spyder](https://www.spyder-ide.org/), and more.
 
 Next, we will show how to configure the default renderer.  After that, we will describe all of the built-in renderers and discuss why you might choose to use each one.
 
@@ -158,16 +158,16 @@ This renderer may be useful when working with notebooks than contain lots of lar
 
 ###### `plotly_mimetype`
 
-The `plotly_mimetype` renderer creates a specification of the figure (called a MIME-type bundle), and requests that the current user interface displays it. User interfaces that support this renderer include [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), [nteract](https://nteract.io/), and the Visual Studio Code [notebook interface](https://code.visualstudio.com/docs/python/jupyter-support).
+The `plotly_mimetype` renderer creates a specification of the figure (called a MIME-type bundle), and requests that the current user interface displays it. User interfaces that support this renderer include [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/), [nteract](https://nteract.io/), and the [Visual Studio Code notebook interface](https://code.visualstudio.com/docs/python/jupyter-support).
 
 ###### `jupyterlab`, `nteract`, and `vscode`
-These are aliases for `plotly_mimetype` since this renderer is a good choice when working in JupyterLab, nteract, and the Visual Studio Code notebook interface. Note that in VSCode Notebooks, the version of Plotly.js that is used to render is provided by the [vscode-python extension](https://code.visualstudio.com/docs/languages/python) and often trails the latest version by several weeks, so the latest features of `plotly` may not be available in VSCode right away. The situation is similar for Nteract.
+These are aliases for `plotly_mimetype` since this renderer is a good choice when working in JupyterLab, nteract, and the Visual Studio Code notebook interface. Note that in VSCode Notebooks, the version of Plotly.js that is used to render is provided by the [vscode-python extension](https://code.visualstudio.com/docs/languages/python) and often trails the latest version by several weeks, so the latest features of `plotly` may not be available in VSCode right away. The situation is similar for nteract.
 
 ##### Static Image Renderers
 A set of renderers is provided for displaying figures as static images.  These renderers all rely on the [orca](https://github.com/plotly/orca) static image export utility. See the [Static Image Export](https://plot.ly/python/static-image-export/) page for more information on getting set up with [orca].
 
 ###### `png`, `jpeg`, and `svg`
-These renderers display figures as static `.png`, `.jpeg`, and `.svg` files, respectively.  These renderers are useful for user interfaces that do not support inline HTML output, but do support inline static images.  Examples include the [QtConsole](https://qtconsole.readthedocs.io/en/stable/), [Spyder](https://www.spyder-ide.org/), and the PyCharm [notebook interface](https://www.jetbrains.com/help/pycharm/jupyter-notebook-support.html).
+These renderers display figures as static `.png`, `.jpeg`, and `.svg` files, respectively.  These renderers are useful for user interfaces that do not support inline HTML output, but do support inline static images.  Examples include the [QtConsole](https://qtconsole.readthedocs.io/en/stable/), [Spyder](https://www.spyder-ide.org/), and the [PyCharm notebook interface](https://www.jetbrains.com/help/pycharm/jupyter-notebook-support.html).
 
 ```python
 import plotly.graph_objects as go
@@ -259,4 +259,4 @@ No matter the approach chosen to display a figure, [the figure data structure](h
 
 The default JSON serialization mechanism can be slow for figures with many data points or with large `numpy` arrays or data frames. **If [the `orjson` package](https://github.com/ijl/orjson) is installed**, `plotly` will use that instead of the built-in `json` package, which can lead to **5-10x** speedups for large figures.
 
-Once a figure is serialized to JSON, it must be rendered by a browser, either immediately in the user's browser, at some later point if the figure is exported to HTML, or immediately in Kaleido's internal headless browser for static image export. Rendering time is generally proportional to the total number of data points in the figure, the number of traces and the number of subplots. In situations where rendering performance is slow, we recommend considering [the use of `plotly` WebGL traces](/python/webgl-vs-svg/) to exploit GPU-accelerated rendering in the browser, or [using the Datashader library to do Python-side rendering](/python/datashader/) before using `px.imshow()` to render the figure.
+Once a figure is serialized to JSON, it must be rendered by a browser, either immediately in the user's browser, at some later point if the figure is exported to HTML, or immediately in Kaleido's internal headless browser for static image export. Rendering time is generally proportional to the total number of data points in the figure, the number of traces and the number of subplots. In situations where rendering performance is slow, we recommend considering the use of [`plotly` WebGL traces](/python/webgl-vs-svg/) to exploit GPU-accelerated rendering in the browser, or using the [Datashader library](/python/datashader/) to do Python-side rendering before using `px.imshow()` to render the figure.
