@@ -45,8 +45,8 @@ In the same way as the X or Y position of a mark in cartesian coordinates can be
 
 This document explains the following four continuous-color-related concepts:
 
-- **color scales** represent a mapping between the range 0 to 1 and some color domain within which colors are to be interpolated (unlike [discrete color sequences](/python/discrete-color/) which are never interpolated). Color scale defaults depend on the `layout.colorscales` attributes of the active [template](/python/templates/), and can be explicitly specified using the `color_continuous_scale` argument for many [Plotly Express](/python/plotly-express/) functions or the `colorscale` argument in various `graph_objects` such as `layout.coloraxis` or `marker.colorscale` in `go.Scatter` traces or `colorscale` in `go.Heatmap` traces. For example `[(0,"blue"), (1,"red")]` is a simple color scale that interpolated between blue and red via purple, which can also be implicitly represented as `["blue", "red"]` and happens to be one of the [built-in color scales](/python/builtin-colorscales) and therefore referred to as `"bluered"` or `plotly.colors.sequential.Bluered`.
-- **color ranges** represent the minimum to maximum range of data to be mapped onto the 0 to 1 input range of the color scale. Color ranges default to the range of the input data and can be explicitly specified using either the `range_color` or `color_continuous_midpoint` arguments for many Plotly Express functions, or `cmin`/`cmid`/`cmax` or `zmin`/`zmid`/`zmax` for various `graph_objects` such as `layout.coloraxis.cmin` or `marker.cmin` in `go.Scatter` traces or `cmin` in `go.Heatmap` traces. For example, if a color range of `[100, 200]` is used with the color scale above, then any mark with a color value of 100 or less will be blue, and 200 or more will be red. Marks with values in between will be various shades of purple.
+- **color scales** represent a mapping between the range 0 to 1 and some color domain within which colors are to be interpolated (unlike [discrete color sequences](/python/discrete-color/) which are never interpolated). Color scale defaults depend on the `layout.colorscale` attributes of the active [template](/python/templates/), and can be explicitly specified using the `color_continuous_scale` argument for many [Plotly Express](/python/plotly-express/) functions or the `colorscale` argument in various `graph_objects` such as `layout.coloraxis.colorscale` or `marker.colorscale` in `go.Scatter` traces or `colorscale` in `go.Heatmap` traces. For example `[(0,"blue"), (1,"red")]` is a simple color scale that interpolated between blue and red via purple, which can also be implicitly represented as `["blue", "red"]` and happens to be one of the [built-in color scales](/python/builtin-colorscales) and therefore referred to as `"bluered"` or `plotly.colors.sequential.Bluered`.
+- **color ranges** represent the minimum to maximum range of data to be mapped onto the 0 to 1 input range of the color scale. Color ranges default to the range of the input data and can be explicitly specified using either the `range_color` or `color_continuous_midpoint` arguments for many Plotly Express functions, or `cmin`/`cmid`/`cmax` or `zmin`/`zmid`/`zmax` for various `graph_objects` such as `layout.coloraxis.cmin` or `marker.cmin` in `go.Scatter` traces or `zmin` in `go.Heatmap` traces. For example, if a color range of `[100, 200]` is used with the color scale above, then any mark with a color value of 100 or less will be blue, and 200 or more will be red. Marks with values in between will be various shades of purple.
 - **color bars** are legend-like visible representations of the color range and color scale with optional tick labels and tick marks. Color bars can be configured with attributes inside `layout.coloraxis.colorbar` or in places like `marker.colorbar` in `go.Scatter` traces or `colorbar` in `go.Heatmap` traces.
 - **color axes** connect color scales, color ranges and color bars to a trace's data. By default, any colorable attribute in a trace is attached to its own local color axis, but color axes may also be shared across attributes and traces by setting e.g. `marker.coloraxis` in `go.Scatter` traces or `coloraxis` in `go.Heatmap` traces. Local color axis attributes are configured within traces e.g. `marker.showscale` whereas shared color axis attributes are configured within the Layout e.g. `layout.coloraxis.showscale`.
 
@@ -105,7 +105,7 @@ IFrame(snippet_url + 'colorscales', width='100%', height=1200)
 
 ### Color Scales in Plotly Express
 
-By default, [Plotly Express](/python/plotly-express/) will use the color scale from the active [template](/python/templates/)'s `layout.colorscales.sequential` attribute, and the default active template is `plotly` which uses the `Plasma` color scale. You can choose any of the [built-in color scales](/python/builtin-colorscales/), however, or define your own.
+By default, [Plotly Express](/python/plotly-express/) will use the color scale from the active [template](/python/templates/)'s `layout.colorscale.sequential` attribute, and the default active template is `plotly` which uses the `Plasma` color scale. You can choose any of the [built-in color scales](/python/builtin-colorscales/), however, or define your own.
 
 Here is an example that creates a scatter plot using Plotly Express, with points colored using the Viridis color scale.
 
@@ -148,6 +148,7 @@ data = [[1, .3, .5, .9],
         [.3, .1, .4, 1],
         [.2, .8, .9, .3]]
 fig = px.imshow(data, color_continuous_scale=px.colors.sequential.Cividis_r)
+
 fig.show()
 ```
 
@@ -222,14 +223,14 @@ fig.show()
 
 ### Hiding or Customizing the Plotly Express Color Bar
 
-Plotly Express binds all traces to [`layout.coloraxis`](/python/reference/layout/coloraxis/), rather than using trace-specific color axes. This means that the color bar can configured there, for example it can be hidden:
+Plotly Express binds all traces to [`layout.coloraxis`](/python/reference/layout/coloraxis/), rather than using trace-specific color axes. This means that the color bar can be configured there, for example it can be hidden:
 
 ```python
 import plotly.express as px
 df = px.data.tips()
 fig = px.density_heatmap(df, x="total_bill", y="tip", title="No color bar on this density plot")
 
-fig.update_layout(coloraxis_showscale=False)
+fig.update_coloraxes(showscale=False)
 
 fig.show()
 ```
@@ -241,8 +242,8 @@ import plotly.express as px
 df = px.data.tips()
 fig = px.density_heatmap(df, x="total_bill", y="tip", title="Customized color bar on this density plot")
 
-fig.update_layout(coloraxis_colorbar=dict(
-    title="Number of Bills per Cell",
+fig.update_coloraxes(colorbar=dict(
+    title_text="Number of Bills per Cell",
     thicknessmode="pixels", thickness=50,
     lenmode="pixels", len=200,
     yanchor="top", y=1,
@@ -266,12 +267,13 @@ fig = px.parallel_coordinates(df, dimensions=["sepal_length", "sepal_width", "pe
                                                      (0.33, "green"), (0.66, "green"),
                                                      (0.66, "blue"),  (1.00, "blue")])
 
-fig.update_layout(coloraxis_colorbar=dict(
-    title="Species",
+fig.update_coloraxes(colorbar=dict(
+    title_text="Species",
     tickvals=[1,2,3],
     ticktext=["setosa","versicolor","virginica"],
     lenmode="pixels", len=100,
 ))
+
 fig.show()
 ```
 
@@ -286,11 +288,12 @@ import numpy as np
 df = px.data.gapminder().query("year == 2007")
 fig = px.scatter(df, y="lifeExp", x="pop", color=np.log10(df["pop"]), hover_name="country", log_x=True)
 
-fig.update_layout(coloraxis_colorbar=dict(
-    title="Population",
+fig.update_coloraxes(colorbar=dict(
+    title_text="Population",
     tickvals=[6,7,8,9],
     ticktext=["1M", "10M", "100M", "1B"],
 ))
+
 fig.show()
 ```
 
@@ -361,17 +364,16 @@ values = list(range(40))
 fig.add_trace(go.Scatter(
     x=values,
     y=values,
+    mode="markers",
     marker=dict(
         size=16,
         cmax=39,
         cmin=0,
         color=values,
-        colorbar=dict(
-            title="Colorbar"
-        ),
+        colorbar_title_text="Colorbar",
         colorscale="Viridis"
     ),
-    mode="markers"))
+))
 
 fig.show()
 ```
@@ -430,21 +432,27 @@ fig.show()
 
 ### Setting the Midpoint of a Diverging Color scale with Graph Objects
 
-The following example uses the [marker.cmid](https://plotly.com/python/reference/scatter/#scatter-marker-cmid) attribute to set the mid-point of the color domain by scaling 'cmin' and/or 'cmax' to be equidistant to this point. It only has impact when [marker.color](https://plotly.com/python/reference/scattercarpet/#scattercarpet-marker-line-color) sets to a numerical array, and 'marker.cauto' is `True`.
+The following example uses the `marker.cmid` attribute to set the mid-point of the color domain by scaling `marker.cmin` and/or `marker.cmax` to be equidistant to this point. It only has impact when `marker.color` sets to a numerical array, and `marker.cauto` is `True`.
 
 ```python
 import plotly.graph_objects as go
 
 fig = go.Figure()
+
 fig.add_trace(go.Scatter(
     y=list(range(-5,15)),
     mode="markers",
-    marker={"size": 25, "color": list(range(-3,10)), "cmid": 0}))
+    marker=dict(
+      size=25,
+      color=list(range(-3,10)),
+      cmid=0
+    )
+))
 
 fig.show()
 ```
 
-The heatmap chart uses [marker.zmid](https://plotly.com/python/reference/scatter/#scatter-marker-zmid) attribute to set the mid-point of the color domain.
+The heatmap chart uses `zmid` attribute to set the mid-point of the color domain.
 
 ```python
 import plotly.graph_objects as go
@@ -453,10 +461,13 @@ a = list(range(-10,5))
 b = list(range(-5,10))
 c = list(range(-5,15))
 
-fig = go.Figure(go.Heatmap(
+fig = go.Figure()
+
+fig.add_trace(go.Heatmap(
     z=[a, b, c],
     colorscale='RdBu',
-    zmid=0))
+    zmid=0
+))
 
 fig.show()
 ```
@@ -495,20 +506,16 @@ import plotly.graph_objects as go
 import urllib
 import json
 
-# Load heatmap data
 response = urllib.request.urlopen(
     "https://raw.githubusercontent.com/plotly/datasets/master/custom_heatmap_colorscale.json")
 dataset = json.load(response)
 
-# Create and show figure
 fig = go.Figure()
 
 fig.add_trace(go.Heatmap(
     z=dataset["z"],
     colorbar=dict(
-        title="Surface Heat",
-        titleside="top",
-        tickmode="array",
+        title_text="Surface Heat",
         tickvals=[2, 50, 100],
         ticktext=["Cool", "Mild", "Hot"],
         ticks="outside"
@@ -520,7 +527,7 @@ fig.show()
 
 ### Color Bar Displayed Horizontally
 
-By default, color bars are displayed vertically. You can change a color bar to be displayed horizontally by setting the `colorbar` `orientation` attribute to `h`.
+By default, color bars are displayed vertically. You can change a color bar to be displayed horizontally by setting the `orientation` attribute to `"h"`.
 
 ```python
 import plotly.graph_objects as go
@@ -528,37 +535,43 @@ import plotly.graph_objects as go
 import urllib
 import json
 
-# Load heatmap data
 response = urllib.request.urlopen(
     "https://raw.githubusercontent.com/plotly/datasets/master/custom_heatmap_colorscale.json")
 dataset = json.load(response)
 
-# Create and show figure
 fig = go.Figure()
 
 fig.add_trace(go.Heatmap(
     z=dataset["z"],
-    colorbar=dict(orientation='h')))
+    colorbar_orientation='h'
+))
 
 fig.show()
 ```
 
 ### Sharing a Color Axis with Graph Objects
 
-To share colorscale information in multiple subplots, you can use [coloraxis](https://plotly.com/javascript/reference/scatter/#scatter-marker-line-coloraxis).
+To share colorscale information in multiple subplots, you can use `coloraxis`.
 
 ```python
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-fig = make_subplots(1,2)
+fig = make_subplots(rows=1, cols=2)
 
-fig.add_trace(
- go.Heatmap(x = [1, 2, 3, 4], z = [[1, 2, 3, 4], [4, -3, -1, 1]], coloraxis = "coloraxis"), 1,1)
+fig.add_trace(go.Heatmap(
+    x=[1, 2, 3, 4],
+    z=[[1, 2, 3, 4], [4, -3, -1, 1]],
+    coloraxis="coloraxis"
+), row=1, col=1)
 
-fig.add_trace(
- go.Heatmap(x = [3, 4, 5, 6], z = [[10, 2, 1, 0], [4, 3, 5, 6]], coloraxis = "coloraxis"),1,2)
-fig.update_layout(coloraxis = {'colorscale':'viridis'})
+fig.add_trace(go.Heatmap(
+    x=[3, 4, 5, 6],
+    z=[[10, 2, 1, 0], [4, 3, 5, 6]],
+    coloraxis="coloraxis"
+), row=1, col=2)
+
+fig.update_coloraxes(colorscale='viridis')
 
 fig.show()
 ```
@@ -569,25 +582,20 @@ fig.show()
 import plotly.graph_objects as go
 
 fig = go.Figure(go.Heatmap(
-    z= [[10, 100.625, 1200.5, 150.625, 2000],
+    z=[[10, 100.625, 1200.5, 150.625, 2000],
        [5000.625, 60.25, 8.125, 100000, 150.625],
        [2000.5, 300.125, 50., 8.125, 12.5],
        [10.625, 1.25, 3.125, 6000.25, 100.625],
        [0, 0.625, 2.5, 50000.625, 10]],
-    colorscale= [
+    colorscale=[
         [0, 'rgb(250, 250, 250)'],        #0
         [1./10000, 'rgb(200, 200, 200)'], #10
         [1./1000, 'rgb(150, 150, 150)'],  #100
         [1./100, 'rgb(100, 100, 100)'],   #1000
         [1./10, 'rgb(50, 50, 50)'],       #10000
         [1., 'rgb(0, 0, 0)'],             #100000
-
     ],
-    colorbar= dict(
-        tick0= 0,
-        tickmode= 'array',
-        tickvals= [0, 1000, 10000, 100000]
-    )
+    colorbar_tickvals=[0, 1000, 10000, 100000]
 ))
 
 fig.show()
